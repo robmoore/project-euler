@@ -5,14 +5,23 @@
 
 module Prob4 where
 
-import qualified Data.List as DL (minimumBy, nub)
+import qualified Data.List as DL (filter)
 
--- Not the most efficient means to do this since we produce duplicate pairs. Also, we only need the first
--- value so really a lazy list would be preferable. See combine function in challenge-8.hs.
+-- We only need the first value so really a lazy list would be preferable. However, the result
+-- from map is not sorted (a high fst value and a low snd value results in a palindrome may be
+-- less than what will be returned subsequently in the next fst value (998, say) and a higher
+-- snd value (that is, the sum of the later multicand and the multiplier are greater than the
+-- former value). Hence, this implementation must sort the results to determine a solution.
 largestPalindrome :: Int -> Int
-largestPalindrome n = DL.minimumBy (flip compare) p
-    where r = reverse [1..(read $ replicate n '9')]
-          p = DL.nub [prod | i <- r, j <- r, let prod = i * j, let s = splitAt n $ show prod, fst s == reverse (snd s)]
+largestPalindrome n = maximum pal
+    where range = reverse [1..(read $ replicate n '9')]
+          prd = map (\x -> head x * last x) $ combinations 2 range
+          pal = DL.filter ((\y -> fst y == reverse (snd y)) . splitAt n . show) prd
+
+combinations :: Int -> [a] -> [[a]]
+combinations 0 _ = [[]]
+combinations _ [] = []
+combinations n (x:xs) = map (x:) (combinations (n - 1) xs) ++ combinations n xs
 
 main :: IO ()
 main = do
