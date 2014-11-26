@@ -6,11 +6,17 @@
 -- sequence whose values do not exceed four million,
 -- find the sum of the even-valued terms.
 
+module Prob2 where
+
 fibsum :: Integral a => a -> a
 fibsum limit = sum $ filter even $ fib 1 2
     where
   fib x y
-      | y <= limit = [x] ++ fib y (x + y) 
+      | y <= limit = x : fib y (x + y)
       | otherwise = [x] -- stop once either addend exceeds limit
 
-solution = fibsum $ round 4e6
+main :: IO ()
+main = do
+    let solution = fibsum $ round 4e6
+    putStrLn $ show solution
+
