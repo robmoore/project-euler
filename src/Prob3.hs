@@ -16,4 +16,4 @@ lpfc i p
 main :: IO ()
 main = do
     let solution = last $ lpfc 600851475143 primes
-    putStrLn $ show solution
+    print solution

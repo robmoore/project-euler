@@ -18,5 +18,5 @@ fibsum limit = sum $ filter even $ fib 1 2
 main :: IO ()
 main = do
     let solution = fibsum $ round 4e6
-    putStrLn $ show solution
+    print solution
 
