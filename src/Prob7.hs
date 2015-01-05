@@ -7,18 +7,18 @@
 
 module Prob7 where
 
-primes :: Int -> [Int]
-primes n = take n $ 2 : filter isPrime odds
+prime :: Int -> Int
+prime n = head . drop (n - 1) $ 2 : filter isPrime odds
    where estP = pOfN (fromIntegral n)
          sqrtOfEstP = floor $ sqrt estP
          odds = [3,5..]
-         isMultiple x y = x == y || mod y x /= 0 -- filter out multiples of x without filtering out x itself
+         isMultiple x y = x /= y && mod y x == 0 -- filter out multiples of x without filtering out x itself
          isMultipleOfX = map isMultiple $ take sqrtOfEstP odds  -- partially apply x values to sieve function
-         isPrime x = all ($ x) isMultipleOfX -- test if x passes sieve
+         isPrime y = not $ any ($ y) isMultipleOfX -- test if x passes sieve
 
 -- Calculates estimate of the nth prime. In practice, this is higher than the real number.
 pOfN :: Floating a => a -> a
 pOfN n = n * (log n + log (log n - 1))
 
 main :: IO()
-main = print $ last $ primes 10001
+main = print $ prime 10001
